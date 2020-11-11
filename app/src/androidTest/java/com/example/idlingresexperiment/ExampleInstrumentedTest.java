@@ -32,13 +32,10 @@ public class ExampleInstrumentedTest {
     @Before
     public void registerIdlingResource() {
         ActivityScenario activityScenario = ActivityScenario.launch(MainActivity.class);
-        activityScenario.onActivity(new ActivityScenario.ActivityAction<MainActivity>() {
-            @Override
-            public void perform(MainActivity activity) {
-                mIdlingResource = activity.getIdlingResource();
-                // To prove that the test fails, omit this call:
-                IdlingRegistry.getInstance().register(mIdlingResource);
-            }
+        activityScenario.onActivity((ActivityScenario.ActivityAction<MainActivity>) activity -> {
+            mIdlingResource = activity.getIdlingResource();
+            // To prove that the test fails, omit this call:
+            IdlingRegistry.getInstance().register(mIdlingResource);
         });
     }
 

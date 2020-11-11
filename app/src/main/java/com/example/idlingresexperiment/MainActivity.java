@@ -27,9 +27,7 @@ public class MainActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // TODO: RuntimeException: Cannot create an instance of class com.example.idlingresexperiment.MessageDelayerViewModel
-        //  Caused by: java.lang.IllegalAccessException: java.lang.Class<com.example.idlingresexperiment.MessageDelayerViewModel>
-        //  is not accessible from java.lang.Class<androidx.lifecycle.ViewModelProvider$NewInstanceFactory>
+        // link activity with the ViewModel class that controls the ui
         MessageDelayerViewModel viewModel = new ViewModelProvider(this).get(MessageDelayerViewModel.class);
 
         mTextView = findViewById(R.id.textView);
