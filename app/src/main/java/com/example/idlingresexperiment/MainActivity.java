@@ -1,6 +1,5 @@
 package com.example.idlingresexperiment;
 
-import android.app.Activity;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -8,18 +7,18 @@ import androidx.annotation.VisibleForTesting;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.test.espresso.IdlingResource;
-import android.view.View;
+
 import android.widget.TextView;
 
 /**
  * Gets a text String from the user and displays it back after a while.
  */
-public class MainActivity extends AppCompatActivity implements View.OnClickListener{
+public class MainActivity extends AppCompatActivity{
 
     // The TextView used to display the message inside the Activity.
     private TextView mTextView;
-
     // The Idling Resource which will be null in production.
     @Nullable private SimpleIdlingResource mIdlingResource;
 
@@ -28,24 +27,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Set the listeners for the buttons.
-        findViewById(R.id.button).setOnClickListener(this);
+        // TODO: RuntimeException: Cannot create an instance of class com.example.idlingresexperiment.MessageDelayerViewModel
+        //  Caused by: java.lang.IllegalAccessException: java.lang.Class<com.example.idlingresexperiment.MessageDelayerViewModel>
+        //  is not accessible from java.lang.Class<androidx.lifecycle.ViewModelProvider$NewInstanceFactory>
+        MessageDelayerViewModel viewModel = new ViewModelProvider(this).get(MessageDelayerViewModel.class);
 
         mTextView = findViewById(R.id.textView);
+        findViewById(R.id.button).setOnClickListener(v -> viewModel.processMessage(mIdlingResource));
 
-        MessageDelayer md = new MessageDelayer();
-        MutableLiveData<String> messageData = md.getText();
-        messageData.observe(this, new Observer<String>() {
-            @Override
-            public void onChanged(String s) {
-                mTextView.setText(s);
-            }
-        });
-    }
-
-    @Override
-    public void onClick(View view) {
-        MessageDelayer.processMessage(mIdlingResource);
+        MutableLiveData<String> messageData = viewModel.getText();
+        messageData.observe(this, s -> mTextView.setText(s));
     }
 
     /**
